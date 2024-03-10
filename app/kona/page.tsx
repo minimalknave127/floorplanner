@@ -30,6 +30,7 @@ export default function KonvaScreen() {
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
   const [linePos, setLinePos] = useState({ x: 0, y: 0 });
   const [enableDraw, setEnableDraw] = useState(true);
+  const [center, setCenter] = useState<point>({ x: 0, y: 0 });
 
   function snapToGrid(value: number) {
     // Round the value to the nearest multiple of gridSize
@@ -53,23 +54,32 @@ export default function KonvaScreen() {
 
   function calculateCenter(coordinates: point[]) {
     if (coordinates.length === 0) {
-      return null; // Or throw an error
+      return { x: 0, y: 0 }; // Or throw an error
+    }
+
+    let coords = coordinates;
+
+    if (coords.length > 4) {
+      coords = coords.slice(0, -1);
     }
 
     let sumX = 0,
       sumY = 0;
 
-    for (let i = 0; i < coordinates.length; i++) {
+    console.log("coords", coords);
+
+    for (let i = 0; i < coords.length; i++) {
       sumX += coordinates[i].x;
       sumY += coordinates[i].y;
     }
 
     return {
-      x: sumX / coordinates.length,
-      y: sumY / coordinates.length,
+      x: sumX / coords.length,
+      y: sumY / coords.length,
     };
   }
   useEffect(() => {
+    setCenter(calculateCenter(points));
     const angle =
       points.length > 0 ? calculateAngle(mouse, points[points.length - 1]) : 0;
     console.log("angle", angle);
@@ -114,10 +124,11 @@ export default function KonvaScreen() {
       removeEventListener("click", handleMouseClick);
     };
   }, [linePos, enableDraw]);
+  console.log("points", points);
   return (
     <>
       <div className="absolute top-0 left-0 z-10">
-        center: {JSON.stringify(calculateCenter(points))}
+        center: {JSON.stringify(center)}
       </div>
       <Stage width={window.innerWidth} height={window.innerHeight}>
         <Layer draggable>
@@ -131,21 +142,28 @@ export default function KonvaScreen() {
               ...(enableDraw ? [linePos.x, linePos.y] : []),
             ]}
           />
+          {points.map((p, i) => (
+            <Rect
+              key={i}
+              x={p.x - 5 / 2}
+              y={p.y - 5 / 2}
+              width={5}
+              height={5}
+              fill="blue"
+            />
+          ))}
           <Rect
-            x={calculateCenter(points)?.x}
-            y={calculateCenter(points)?.y}
-            width={4}
-            height={4}
+            x={center?.x - 5 / 2}
+            y={center?.y - 5 / 2}
+            width={5}
+            height={5}
             fill="red"
-            shadowBlur={10}
           />
           <Text
             fill="red"
-            x={calculateCenter(points)?.x}
-            y={calculateCenter(points)?.y}
-            text={`center: x: ${calculateCenter(points)?.x} y: ${
-              calculateCenter(points)?.y
-            }`}
+            x={center?.x}
+            y={center?.y}
+            text={`center: x: ${center?.x} y: ${center?.y}`}
           />
         </Layer>
       </Stage>
