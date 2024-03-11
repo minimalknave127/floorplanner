@@ -152,19 +152,17 @@ export default function KonvaScreen() {
               fill="blue"
             />
           ))}
-          <Rect
-            x={center?.x - 5 / 2}
-            y={center?.y - 5 / 2}
-            width={5}
-            height={5}
-            fill="red"
-          />
-          <Text
-            fill="red"
-            x={center?.x}
-            y={center?.y}
-            text={`center: x: ${center?.x} y: ${center?.y}`}
-          />
+          {isClosed && (
+            <Text
+              fill="red"
+              width={100}
+              height={200}
+              align="center"
+              x={center?.x - 50}
+              y={center?.y - 10}
+              text={`Místnost`}
+            />
+          )}
         </Layer>
       </Stage>
     </>
