@@ -149,7 +149,7 @@ export default function KonvaScreen() {
               y={p.y - 5 / 2}
               width={5}
               height={5}
-              fill="blue"
+              fill="#D3D3D3"
             />
           ))}
           {isClosed && (
