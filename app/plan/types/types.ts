@@ -11,6 +11,7 @@ export type point = {
 export type room = {
   points: point[];
   name: string;
+  id: number;
 };
 
 export type roomObject = {

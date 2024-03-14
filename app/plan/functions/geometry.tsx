@@ -44,6 +44,16 @@ export function calculateCenter(coordinates: point[]) {
   };
 }
 
+export function calculateLineLength(
+  start: point,
+  end: point,
+  gridSize: number
+) {
+  const x = end.x - start.x;
+  const y = end.y - start.y;
+  return Math.sqrt(x * x + y * y) / gridSize;
+}
+
 // calculate polygon area from a set of points
 // must be more than 3 points
 export function calculatePolygonArea(points: point[], gridSize: number) {
@@ -203,6 +213,7 @@ export function calculateDimensionLines(polygon, offsetDistance) {
       x: currentPoint.x + normal.x * offsetDistance,
       y: currentPoint.y + normal.y * offsetDistance,
     };
+
     const endPoint = {
       x: nextPoint.x + normal.x * offsetDistance,
       y: nextPoint.y + normal.y * offsetDistance,
